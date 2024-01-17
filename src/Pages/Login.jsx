@@ -13,6 +13,7 @@ function Login() {
       let { data: login } = await axios.post("/auth", data);
       if (login) {
         toast.success("You sign in successfully");
+        console.log(login);
         localStorage.setItem("token", login.token);
         navigate("/main");
       }

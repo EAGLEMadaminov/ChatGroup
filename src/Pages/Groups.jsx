@@ -1,18 +1,29 @@
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { SearchContext } from "../Context/SearchContext";
 import GroupMembers from "./../Components/GroupMembers";
 import { GroupContext } from "../Context/GroupContext";
+import AddUserModal from "../Components/AddUserModal";
+
 const Groups = () => {
   const [getCurrentGroup, setGetCurrentGroup] = useState([]);
   const [isCreateItem, setIsCreateItem] = useState(false);
   const { showLocaTime } = useContext(SearchContext);
   const [isBought, setIsBought] = useState(false);
   const [isDeleteItem, setIsDeleteItem] = useState(false);
-  const { userName } = useContext(GroupContext);
+  const {
+    userName,
+    showUserAddModal,
+    setShowUserAddModal,
+    isUserAdd,
+    isUserDelete,
+  } = useContext(GroupContext);
+  const [showGroupModal, setShowGroupModal] = useState(false);
+
+  const navigate = useNavigate();
   const params = useParams();
   const id = params.groupsID;
   let token = localStorage.getItem("token");
@@ -63,7 +74,7 @@ const Groups = () => {
     getAllGroups();
 
     return () => {};
-  }, [id, isCreateItem, isBought, isDeleteItem]);
+  }, [id, isCreateItem, isBought, isDeleteItem, isUserAdd, isUserDelete]);
 
   const handleBought = async (id) => {
     try {
@@ -115,6 +126,31 @@ const Groups = () => {
       toast.error(error?.response.data.message);
     }
   };
+
+  const deleteGroup = async () => {
+    if (
+      confirm(
+        "Are your sure to delete your account? \n You cannot undo this action!"
+      )
+    ) {
+      try {
+        let { data } = await axios.delete(`/groups/${id}`, {
+          headers: {
+            "x-auth-token": token,
+          },
+        });
+        if (data) {
+          toast.success(data.message);
+          setShowGroupModal(false);
+          navigate("/main");
+        }
+        console.log(data);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
   return (
     <div className="flex gap-5 p-7 mt-[40px] bg-gray-600 w-full">
       <div className=" w-full">
@@ -170,7 +206,7 @@ const Groups = () => {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  {!item.isBought  ? (
+                  {!item.isBought ? (
                     <button
                       onClick={() => handleBought(item._id)}
                       className="p-3  rounded-lg bg-green-700"
@@ -234,7 +270,10 @@ const Groups = () => {
             </span>
             )
           </p>
-          <button className="flex bg-white items-center gap-2 rounded-lg p-1 px-2">
+          <button
+            onClick={() => setShowGroupModal(!showGroupModal)}
+            className="flex bg-white items-center gap-2 rounded-lg p-1 px-2"
+          >
             <span className="pb-2">...</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -250,9 +289,25 @@ const Groups = () => {
           </button>
         </div>
         <div className="bg-white rounded-xl p-4 my-5">
-          <GroupMembers data={getCurrentGroup?.members} />
+          <GroupMembers data={getCurrentGroup} />
         </div>
+        {showGroupModal ? (
+          <div className="absolute top-[120px] gap-4 border right-5 bg-white p-2 px-5 rounded-lg flex flex-col">
+            <button
+              onClick={() => {
+                setShowUserAddModal(!showUserAddModal),
+                  setShowGroupModal(false);
+              }}
+            >
+              Add member
+            </button>
+            <button onClick={() => deleteGroup()}>Delete Group</button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
+      {showUserAddModal ? <AddUserModal groupId={id} /> : ""}
     </div>
   );
 };

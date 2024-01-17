@@ -1,9 +1,31 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SearchContext } from "../Context/SearchContext";
-
+import { toast } from "react-toastify";
+import axios from "axios";
 const GroupsSearch = () => {
   const { searchResult, showLocaTime } = useContext(SearchContext);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  let token = localStorage.getItem("token");
 
+  const handleJoinGroup = async (e, id) => {
+    e.preventDefault();
+    const password = e.target[0].value;
+    try {
+      let { data } = await axios.post(
+        `/groups/${id}/join`,
+        { password },
+        {
+          headers: {
+            "x-auth-token": token,
+          },
+        }
+      );
+      toast.success(data.message);
+      setShowJoinModal(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div className="absolute mx-auto bg-white left-[325px] z-[2] top-[60px]">
       <div className="bg-white">
@@ -28,9 +50,37 @@ const GroupsSearch = () => {
                       Created By {group.owner.name}
                     </p>
                   </div>
-                  <button className="bg-[#0d6efd] p-2 px-4 text-white rounded-lg ">
+                  <button
+                    onClick={() => setShowJoinModal(true)}
+                    className="bg-[#0d6efd] p-2 px-4 text-white rounded-lg "
+                  >
                     Join
                   </button>
+                  {showJoinModal ? (
+                    <div className="absolute top-[90px] bg-white border rounded-lg  right-[-220px] ">
+                      <div className="flex justify-between bg-[#E9ECEF] p-3 rounded-t-lg">
+                        <h2>Group password</h2>
+                        <button onClick={() => setShowJoinModal(false)}>
+                          ✖
+                        </button>
+                      </div>
+                      <form
+                        className="flex flex-col gap-4 p-4"
+                        onSubmit={(e) => handleJoinGroup(e, group._id)}
+                      >
+                        <input
+                          type="password"
+                          className="border rounded-lg p-1 outline-none"
+                          placeholder="****"
+                        />
+                        <button className="bg-[#198754] border rounded-lg  p-1 px-3 text-white">
+                          Join Group
+                        </button>
+                      </form>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               );
             })}

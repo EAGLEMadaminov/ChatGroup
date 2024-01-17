@@ -129,7 +129,7 @@ const SideBar = () => {
         ""
       )}
       {showCreateModal ? (
-        <div className="absolute top-[120px]   left-[255px] bg-white border rounded-lg">
+        <div className="absolute top-[120px] z-[2]  left-[215px] bg-white border rounded-lg">
           <div className="flex py-2 bg-[#E9ECEF] justify-center rounded-t-lg items-center">
             <h2 className="font-semibold">Group name and password</h2>
             <button
@@ -140,7 +140,7 @@ const SideBar = () => {
             </button>
           </div>
           <form
-            className="flex flex-col gap-2 px-5 my-4"
+            className="flex flex-col gap-2 px-5 my-4 "
             onSubmit={handleSubmit(createGroup)}
           >
             <input
