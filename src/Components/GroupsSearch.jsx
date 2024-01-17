@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import { SearchContext } from "../Context/SearchContext";
-import { SideContext } from "../Context/SideBarContext";
 import { toast } from "react-toastify";
+
 const GroupsSearch = () => {
-  const { searchResult, showLocaTime } = useContext(SearchContext);
-  const { isLeaveGroup, setIsLeaveGroup } = useContext(SideContext);
+  const { searchResult, showLocaTime, setShowSearch } =
+    useContext(SearchContext);
   const [showJoinModal, setShowJoinModal] = useState(false);
   let token = localStorage.getItem("token");
 
@@ -22,6 +22,7 @@ const GroupsSearch = () => {
           },
         }
       );
+      setShowSearch(false);
       toast.success(data.message);
       setShowJoinModal(false);
     } catch (error) {
@@ -39,7 +40,7 @@ const GroupsSearch = () => {
               return (
                 <div
                   className="border p-5 text-black flex justify-between items-center"
-                  key={group.id}
+                  key={group._id}
                 >
                   <div>
                     <h2 className="font-semibold text-xl">

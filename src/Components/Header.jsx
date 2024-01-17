@@ -2,14 +2,21 @@ import axios from "axios";
 import { SearchContext } from "../Context/SearchContext";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [showLogOut, setShowLogOut] = useState(false);
-  const { setSearchResult } = useContext(SearchContext);
+  const { setSearchResult, setShowSearch } = useContext(SearchContext);
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
+
   const handleChange = async (e) => {
     const value = e.target.value;
+    if (!value) {
+      setShowSearch(false);
+    } else {
+      setShowSearch(true);
+    }
     try {
       let { data } = await axios.get(`/groups/search?q=${value}`, {
         headers: {
@@ -18,7 +25,7 @@ const Header = () => {
       });
       setSearchResult(data);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.error);
     }
   };
   const LogOutFunc = () => {

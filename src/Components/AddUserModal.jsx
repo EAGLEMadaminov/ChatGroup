@@ -11,7 +11,6 @@ const AddUserModal = ({ groupId }) => {
   const handleChange = async (e) => {
     try {
       let { data } = await axios.get(`/users/search?q=${e.target.value}`);
-      console.log(data);
       setUsers(data);
     } catch (error) {
       toast.error(error.massage);
@@ -19,18 +18,23 @@ const AddUserModal = ({ groupId }) => {
   };
 
   const handleAddUser = async (id) => {
-    let { data } = await axios.post(
-      `/groups/${groupId}/members`,
-      { memberId: id },
-      {
-        headers: {
-          "x-auth-token": token,
-        },
+    try {
+      let { data } = await axios.post(
+        `/groups/${groupId}/members`,
+        { memberId: id },
+        {
+          headers: {
+            "x-auth-token": token,
+          },
+        }
+      );
+      if (data) {
+        setIsUserAd(true);
+        setShowUserAddModal(false);
       }
-    );
-    if (data) {
-      setIsUserAd(true);
-      setShowUserAddModal(false);
+    } catch (error) {
+      toast.error(error.response.data.message);
+
     }
   };
   return (

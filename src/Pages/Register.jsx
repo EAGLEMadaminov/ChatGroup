@@ -17,7 +17,6 @@ const Register = () => {
         navigate("/main");
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     }
   };

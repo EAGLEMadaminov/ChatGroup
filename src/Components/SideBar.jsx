@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { SideContext } from "../Context/SideBarContext";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SideBar = () => {
   const [showCreateBtn, setShowCreateBtn] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const { setGroup, setGetCurrentGroup, isLeaveGroup } =
-    useContext(SideContext);
+  const { setGroup, isLeaveGroup } = useContext(SideContext);
   const [getInfo, setGetInfo] = useState({});
 
   const { register, handleSubmit } = useForm();
@@ -16,7 +16,6 @@ const SideBar = () => {
   let token = localStorage.getItem("token");
 
   const createGroup = async (data) => {
-    console.log(data);
     try {
       let { data: groupInfo } = await axios.post("/groups", data, {
         headers: {
@@ -25,7 +24,7 @@ const SideBar = () => {
       });
       setGroup(groupInfo);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message);
     }
     setShowCreateModal(false);
   };
@@ -38,10 +37,9 @@ const SideBar = () => {
             "x-auth-token": token,
           },
         });
-        console.log(mygroup);
         setGetInfo(mygroup);
       } catch (error) {
-        console.log(error);
+        toast.error(error.response.data.message);
       }
     }
     getMyGroupsFunc();
@@ -69,9 +67,9 @@ const SideBar = () => {
             Profile
           </Link>
         </li>
-        <li className="hover:pl-5 hover:bg-[#d3d4d5] p-2 rounded-lg">
+        <li className=" ">
           <button
-            className="flex items-center gap-2"
+            className="flex hover:pl-5 items-center gap-2 hover:bg-[#d3d4d5] p-2 rounded-lg w-full"
             onClick={() => setShowCreateBtn(!showCreateBtn)}
           >
             <svg

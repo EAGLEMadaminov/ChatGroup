@@ -4,6 +4,8 @@ const SearchContext = createContext();
 
 const SearchProvider = ({ children }) => {
   const [searchResult, setSearchResult] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
+
   const showLocaTime = (time) => {
     let newdate = new Date(time);
     let day = String(newdate.getDate()).padStart(2, 0);
@@ -17,7 +19,13 @@ const SearchProvider = ({ children }) => {
 
   return (
     <SearchContext.Provider
-      value={{ searchResult, setSearchResult, showLocaTime }}
+      value={{
+        searchResult,
+        setSearchResult,
+        showLocaTime,
+        showSearch,
+        setShowSearch,
+      }}
     >
       {children}
     </SearchContext.Provider>

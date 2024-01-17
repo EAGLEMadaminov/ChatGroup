@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { GroupContext } from "../Context/GroupContext";
+import { toast } from "react-toastify";
 
 function Main() {
   const navigate = useNavigate();
@@ -41,10 +42,11 @@ function Main() {
           "Are your sure to delete your account? \n You cannot undo this action!"
         )
       ) {
+        toast.success(data.message);
         navigate("/login");
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -65,8 +67,10 @@ function Main() {
               {user.name}{" "}
               <sup
                 className={`bg-${
-                  user.status == "active" ? "green" : "rose"
-                }-700 text-white px-2 p-1 text-[16px] rounded-lg`}
+                  user.status == "active" ? "green" : ""
+                }-700 bg-${
+                  user.status === "deleted" ? "rose" : ""
+                }-600 text-white px-2 p-1 text-[16px] rounded-lg`}
               >
                 {user.status}
               </sup>

@@ -44,11 +44,10 @@ const Groups = () => {
           "x-auth-token": token,
         },
       });
-      console.log(data);
       toast.success(data.message);
       setIsCreateItem(true);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message);
     }
     e.target.reset();
   };
@@ -64,11 +63,10 @@ const Groups = () => {
         });
         if (data) {
           let current = data.filter((item) => item._id === id);
-          console.log(current);
           setGetCurrentGroup(current[0]);
         }
       } catch (error) {
-        console.log(error);
+        toast.error(error.response.data.message);
       }
     }
     getAllGroups();
@@ -88,7 +86,7 @@ const Groups = () => {
         setIsBought(!isBought);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -104,7 +102,6 @@ const Groups = () => {
         setIsBought(!isBought);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error?.response.data.message);
     }
   };
@@ -117,12 +114,10 @@ const Groups = () => {
         },
       });
       if (data) {
-        console.log(data);
         toast.success(data.message);
         setIsDeleteItem(true);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error?.response.data.message);
     }
   };
@@ -144,7 +139,6 @@ const Groups = () => {
           setShowGroupModal(false);
           navigate("/main");
         }
-        console.log(data);
       } catch (error) {
         toast.error(error.response.data.message);
       }

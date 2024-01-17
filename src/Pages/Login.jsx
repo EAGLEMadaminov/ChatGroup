@@ -13,15 +13,12 @@ function Login() {
       let { data: login } = await axios.post("/auth", data);
       if (login) {
         toast.success("You sign in successfully");
-        console.log(login);
         localStorage.setItem("token", login.token);
         navigate("/main");
       }
     } catch (error) {
       toast.error(error.message);
     }
-
-    console.log(data);
   };
   return (
     <div className=" bg-[#6C757D] top-0 left-0 bottom-0 right-0">
