@@ -1,9 +1,11 @@
+import axios from "axios";
 import { useContext, useState } from "react";
 import { SearchContext } from "../Context/SearchContext";
+import { SideContext } from "../Context/SideBarContext";
 import { toast } from "react-toastify";
-import axios from "axios";
 const GroupsSearch = () => {
   const { searchResult, showLocaTime } = useContext(SearchContext);
+  const { isLeaveGroup, setIsLeaveGroup } = useContext(SideContext);
   const [showJoinModal, setShowJoinModal] = useState(false);
   let token = localStorage.getItem("token");
 

@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 const SideBar = () => {
   const [showCreateBtn, setShowCreateBtn] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const { setGroup, setGetCurrentGroup } = useContext(SideContext);
+  const { setGroup, setGetCurrentGroup, isLeaveGroup } =
+    useContext(SideContext);
   const [getInfo, setGetInfo] = useState({});
 
   const { register, handleSubmit } = useForm();
@@ -44,7 +45,7 @@ const SideBar = () => {
       }
     }
     getMyGroupsFunc();
-  }, [token]);
+  }, [token, isLeaveGroup]);
 
   return (
     <div className="pt-[70px] px-5 w-[250px]">
