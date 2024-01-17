@@ -7,7 +7,7 @@ const Main = () => {
     if (token) {
       navigate("/main");
     } else {
-      navigate("/main");
+      navigate("/login");
     }
   });
   return <div>Main</div>;

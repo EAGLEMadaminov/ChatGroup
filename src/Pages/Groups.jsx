@@ -74,7 +74,7 @@ const Groups = () => {
     getAllGroups();
 
     return () => {};
-  }, [id, isCreateItem, isBought, isDeleteItem, isUserAdd, isUserDelete]);
+  }, [id, isCreateItem, isBought, isDeleteItem, isUserAdd]);
 
   const handleBought = async (id) => {
     try {
@@ -241,16 +241,12 @@ const Groups = () => {
                       </svg>
                     </button>
                   )}
-                  {userName === item?.owner?.name ? (
-                    <button
-                      onClick={() => handleDeleteItem(item._id)}
-                      className="p-2 rounded-lg bg-rose-500"
-                    >
-                      ✖
-                    </button>
-                  ) : (
-                    ""
-                  )}
+                  <button
+                    onClick={() => handleDeleteItem(item._id)}
+                    className="p-2 rounded-lg bg-rose-500"
+                  >
+                    ✖
+                  </button>
                 </div>
               </div>
             );
