@@ -6,7 +6,7 @@ import { SideContext } from "../Context/SideBarContext";
 import { useNavigate } from "react-router-dom";
 
 const GroupMembers = ({ data }) => {
-  const { setIsUserDelete } = useContext(GroupContext);
+  const { setIsUserDelete, currentUser } = useContext(GroupContext);
   const { setIsLeaveGroup } = useContext(SideContext);
   let token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ const GroupMembers = ({ data }) => {
           },
         }
       );
+      console.log(user);
       setIsUserDelete(true);
       setIsLeaveGroup(true);
       toast.success(user.message);
@@ -52,7 +53,8 @@ const GroupMembers = ({ data }) => {
               <p className="capitalize my-1">{item?.name}</p>
               <p className="text-gray-500">{item?.username}</p>
             </div>
-            {data?.owner?._id !== item?._id ? (
+            {data?.owner?.name === currentUser?.name &&
+            item.name !== data?.owner?.name ? (
               <button
                 onClick={() => handleRemoveGroup(item._id)}
                 className="p-2 px-3 ml-auto bg-rose-500 rounded-lg"

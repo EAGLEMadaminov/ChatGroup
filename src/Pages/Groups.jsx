@@ -22,7 +22,6 @@ const Groups = () => {
     isUserAdd,
   } = useContext(GroupContext);
   const [showGroupModal, setShowGroupModal] = useState(false);
-  console.log(currentUser);
   const navigate = useNavigate();
   const params = useParams();
   const id = params.groupsID;
@@ -145,7 +144,6 @@ const Groups = () => {
     }
   };
   const leaveGroupBtn = async () => {
-    console.log("ok");
     if (
       confirm(
         "Are your sure to delete your account? \n You cannot undo this action!"
@@ -159,7 +157,6 @@ const Groups = () => {
         });
         if (data) {
           toast.success(data.message);
-          console.log(data);
           navigate("/main");
           setShowGroupModal(false);
         }
@@ -199,7 +196,6 @@ const Groups = () => {
             </div>
           </div>
           {getCurrentGroup?.items?.map((item) => {
-            console.log(item);
             let time = showLocaTime(item?.owner?.createdAt);
             let boughtTime = showLocaTime(item?.boughtAt);
             return (
