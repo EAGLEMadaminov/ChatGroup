@@ -9,6 +9,7 @@ function Main() {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const { setUserName } = useContext(GroupContext);
+  const [copyText, setCopyText] = useState("");
 
   let token = localStorage.getItem("token");
 
@@ -22,6 +23,7 @@ function Main() {
         });
         console.log(data);
         setUserName(data?.name);
+        setCopyText(data?.username);
         setUser(data);
       } catch (error) {
         console.log(error);
@@ -50,10 +52,13 @@ function Main() {
     }
   };
 
-  const handleCopyUserName = () => {};
+  const handleCopyUserName = () => {
+    navigator.clipboard.writeText(copyText);
+    alert("Copied");
+  };
 
   return (
-    <div className="bg-gray-600 w-full pt-[70px] ">
+    <div className="main-image w-full pt-[70px] h-screen ">
       <div className="bg-white flex justify-between items-start mx-7 p-10 py-5 rounded-3xl">
         <div className="flex items-center">
           <div className="">

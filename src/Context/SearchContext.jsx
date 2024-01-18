@@ -5,6 +5,7 @@ const SearchContext = createContext();
 const SearchProvider = ({ children }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+  const [isJoindedGroup, setIsJoinedGroup] = useState(false);
 
   const showLocaTime = (time) => {
     let newdate = new Date(time);
@@ -25,6 +26,8 @@ const SearchProvider = ({ children }) => {
         showLocaTime,
         showSearch,
         setShowSearch,
+        isJoindedGroup,
+        setIsJoinedGroup,
       }}
     >
       {children}

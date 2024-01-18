@@ -15,14 +15,14 @@ const Groups = () => {
   const [isBought, setIsBought] = useState(false);
   const [isDeleteItem, setIsDeleteItem] = useState(false);
   const {
-    userName,
     showUserAddModal,
+    isUserDelete,
+    currentUser,
     setShowUserAddModal,
     isUserAdd,
-    isUserDelete,
   } = useContext(GroupContext);
   const [showGroupModal, setShowGroupModal] = useState(false);
-
+  console.log(currentUser);
   const navigate = useNavigate();
   const params = useParams();
   const id = params.groupsID;
@@ -72,7 +72,7 @@ const Groups = () => {
     getAllGroups();
 
     return () => {};
-  }, [id, isCreateItem, isBought, isDeleteItem, isUserAdd]);
+  }, [id, isCreateItem, isUserDelete, isBought, isDeleteItem, isUserAdd]);
 
   const handleBought = async (id) => {
     try {
@@ -144,9 +144,34 @@ const Groups = () => {
       }
     }
   };
+  const leaveGroupBtn = async () => {
+    console.log("ok");
+    if (
+      confirm(
+        "Are your sure to delete your account? \n You cannot undo this action!"
+      )
+    ) {
+      try {
+        let { data } = await axios.post(`/groups/${id}/leave`, null, {
+          headers: {
+            "x-auth-token": token,
+          },
+        });
+        if (data) {
+          toast.success(data.message);
+          console.log(data);
+          navigate("/main");
+          setShowGroupModal(false);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response.data.message);
+      }
+    }
+  };
 
   return (
-    <div className="flex gap-5 p-7 mt-[40px] bg-gray-600 w-full">
+    <div className="flex gap-5 p-7 mt-[40px] main-image min-h-screen w-full">
       <div className=" w-full">
         <h2 className="text-white text-5xl">{getCurrentGroup?.name}</h2>
         <div className="rounded-xl bg-white my-3 p-4">
@@ -174,6 +199,7 @@ const Groups = () => {
             </div>
           </div>
           {getCurrentGroup?.items?.map((item) => {
+            console.log(item);
             let time = showLocaTime(item?.owner?.createdAt);
             let boughtTime = showLocaTime(item?.boughtAt);
             return (
@@ -200,7 +226,7 @@ const Groups = () => {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  {!item.isBought ? (
+                  {item.isBoughtAt !== currentUser.name && !item.isBought ? (
                     <button
                       onClick={() => handleBought(item._id)}
                       className="p-3  rounded-lg bg-green-700"
@@ -218,6 +244,11 @@ const Groups = () => {
                       </svg>
                     </button>
                   ) : (
+                    ""
+                  )}
+                  {item.isBought &&
+                  item.boughtBy.name === item.owner.name &&
+                  currentUser.name == item.boughtBy.name ? (
                     <button
                       className="p-3  rounded-lg bg-yellow-400"
                       onClick={() => handleBack(item._id)}
@@ -234,13 +265,20 @@ const Groups = () => {
                         />
                       </svg>
                     </button>
+                  ) : (
+                    ""
                   )}
-                  <button
-                    onClick={() => handleDeleteItem(item._id)}
-                    className="p-2 rounded-lg bg-rose-500"
-                  >
-                    ✖
-                  </button>
+
+                  {item.owner.name === currentUser.name ? (
+                    <button
+                      onClick={() => handleDeleteItem(item._id)}
+                      className="p-2 rounded-lg bg-rose-500"
+                    >
+                      ✖
+                    </button>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             );
@@ -291,7 +329,11 @@ const Groups = () => {
             >
               Add member
             </button>
-            <button onClick={() => deleteGroup()}>Delete Group</button>
+            {currentUser._id === getCurrentGroup?.owner._id ? (
+              <button onClick={() => deleteGroup()}>Delete Group</button>
+            ) : (
+              <button onClick={() => leaveGroupBtn()}>Leave Group</button>
+            )}
           </div>
         ) : (
           ""

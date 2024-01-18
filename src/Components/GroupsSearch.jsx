@@ -4,7 +4,7 @@ import { SearchContext } from "../Context/SearchContext";
 import { toast } from "react-toastify";
 
 const GroupsSearch = () => {
-  const { searchResult, showLocaTime, setShowSearch } =
+  const { searchResult, showLocaTime, setShowSearch, setIsJoinedGroup } =
     useContext(SearchContext);
   const [showJoinModal, setShowJoinModal] = useState(false);
   let token = localStorage.getItem("token");
@@ -23,6 +23,7 @@ const GroupsSearch = () => {
         }
       );
       setShowSearch(false);
+      setIsJoinedGroup(true);
       toast.success(data.message);
       setShowJoinModal(false);
     } catch (error) {

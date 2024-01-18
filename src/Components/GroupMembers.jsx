@@ -13,14 +13,16 @@ const GroupMembers = ({ data }) => {
 
   const handleRemoveGroup = async (id) => {
     try {
-      let { data: user } = await axios.post(`/groups/${data._id}/leave`, null, {
-        headers: {
-          "x-auth-token": token,
-        },
-      });
+      let { data: user } = await axios.delete(
+        `/groups/${data._id}/members/${id}`,
+        {
+          headers: {
+            "x-auth-token": token,
+          },
+        }
+      );
       setIsUserDelete(true);
       setIsLeaveGroup(true);
-      navigate("/main");
       toast.success(user.message);
     } catch (error) {
       toast.error(error.message);

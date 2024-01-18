@@ -4,12 +4,15 @@ import axios from "axios";
 import { SideContext } from "../Context/SideBarContext";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { SearchContext } from "../Context/SearchContext";
 
 const SideBar = () => {
   const [showCreateBtn, setShowCreateBtn] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const { setGroup, isLeaveGroup } = useContext(SideContext);
+  const { isJoindedGroup } = useContext(SearchContext);
   const [getInfo, setGetInfo] = useState({});
+  const [isCreateGroup, setIsCreateGroup] = useState(false);
 
   const { register, handleSubmit } = useForm();
 
@@ -22,6 +25,7 @@ const SideBar = () => {
           "x-auth-token": token,
         },
       });
+      setIsCreateGroup(true);
       setGroup(groupInfo);
     } catch (error) {
       toast.error(error.response.data.message);
@@ -43,7 +47,7 @@ const SideBar = () => {
       }
     }
     getMyGroupsFunc();
-  }, [token, isLeaveGroup]);
+  }, [token, isLeaveGroup, isJoindedGroup, isCreateGroup]);
 
   return (
     <div className="pt-[70px] px-5 w-[250px]">
